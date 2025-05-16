@@ -8,10 +8,12 @@ class CategoriesScreen extends StatelessWidget {
     super.key,
     required this.onToggleFavorite,
     required this.favoriteMeals,
+    required this.availableMeals,
   });
 
   final void Function(Meal meal) onToggleFavorite;
   final List<Meal> favoriteMeals;
+  final List<Meal> availableMeals;
 
   @override
   Widget build(BuildContext context) {
@@ -29,6 +31,7 @@ class CategoriesScreen extends StatelessWidget {
             category: category,
             onToggleFavorite: onToggleFavorite,
             favoriteMeals: favoriteMeals,
+            availableMeals: availableMeals,
           ),
       ],
     );

@@ -1,9 +1,17 @@
+import 'package:find_your_meals/data/dummy_data.dart';
 import 'package:find_your_meals/models/meal.dart';
 import 'package:find_your_meals/screens/categories_screen.dart';
 import 'package:find_your_meals/screens/filters_screen.dart';
 import 'package:find_your_meals/screens/meals_screen.dart';
 import 'package:find_your_meals/widgets/main_drawer.dart';
 import 'package:flutter/material.dart';
+
+const kFilterInitializer = {
+  Filter.glutenFree: false,
+  Filter.lactoseFree: false,
+  Filter.vegan: false,
+  Filter.vegetarian: false,
+};
 
 class TabsScreen extends StatefulWidget {
   const TabsScreen({super.key});
@@ -15,6 +23,7 @@ class TabsScreen extends StatefulWidget {
 class _TabsScreenState extends State<TabsScreen> {
   int _selectedPageIndex = 0;
   final List<Meal> _favoriteMeals = [];
+  Map<Filter, bool> _selectedFilters = kFilterInitializer;
 
   void showSnackbar(String content) {
     ScaffoldMessenger.of(context).clearSnackBars();
@@ -54,15 +63,37 @@ class _TabsScreenState extends State<TabsScreen> {
         context,
         MaterialPageRoute(builder: (ctx) => FiltersScreen()),
       );
-      print('🟨 $result');
+
+      setState(() {
+        _selectedFilters = result ?? kFilterInitializer;
+      });
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    final availableMeals =
+        dummyMeals.where((meal) {
+          if (_selectedFilters[Filter.glutenFree]! && !meal.isGlutenFree) {
+            return false;
+          }
+          if (_selectedFilters[Filter.lactoseFree]! && !meal.isLactoseFree) {
+            return false;
+          }
+          if (_selectedFilters[Filter.vegan]! && !meal.isVegan) {
+            return false;
+          }
+          if (_selectedFilters[Filter.vegetarian]! && !meal.isVegetarian) {
+            return false;
+          }
+
+          return true;
+        }).toList();
+
     Widget activeScreen = CategoriesScreen(
       onToggleFavorite: _toggleMealFavoriteStatus,
       favoriteMeals: _favoriteMeals,
+      availableMeals: availableMeals,
     );
     var activePageTitle = 'Categories';
 

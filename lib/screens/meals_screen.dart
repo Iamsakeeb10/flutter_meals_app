@@ -33,8 +33,24 @@ class MealsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Widget mainContent = Padding(
+      padding: const EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 16.0),
+      child: ListView.builder(
+        itemCount: meals.length,
+        itemBuilder: (context, index) {
+          final meal = meals[index];
+          return MealItem(
+            meal: meal,
+            onSelectMeal: (meal) {
+              selectMeal(context, meal);
+            },
+          );
+        },
+      ),
+    );
+
     if (meals.isEmpty) {
-      return Center(
+      mainContent = Center(
         child: Text(
           'Oops! There is no meals yet...',
           style: Theme.of(
@@ -46,21 +62,7 @@ class MealsScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: title != null ? AppBar(title: Text(title!)) : null,
-      body: Padding(
-        padding: const EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 16.0),
-        child: ListView.builder(
-          itemCount: meals.length,
-          itemBuilder: (context, index) {
-            final meal = meals[index];
-            return MealItem(
-              meal: meal,
-              onSelectMeal: (meal) {
-                selectMeal(context, meal);
-              },
-            );
-          },
-        ),
-      ),
+      body: mainContent,
     );
   }
 }

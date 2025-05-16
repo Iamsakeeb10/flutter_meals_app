@@ -1,4 +1,3 @@
-import 'package:find_your_meals/data/dummy_data.dart';
 import 'package:find_your_meals/models/category.dart';
 import 'package:find_your_meals/models/meal.dart';
 import 'package:find_your_meals/screens/meals_screen.dart';
@@ -10,15 +9,17 @@ class CategoryGridItem extends StatelessWidget {
     required this.category,
     required this.onToggleFavorite,
     required this.favoriteMeals,
+    required this.availableMeals,
   });
 
   final Category category;
   final void Function(Meal meal) onToggleFavorite;
   final List<Meal> favoriteMeals;
+  final List<Meal> availableMeals;
 
   void onPressCategoryHandler(BuildContext context) {
     final filteredMeals =
-        dummyMeals
+        availableMeals
             .where((meal) => meal.categories.contains(category.id))
             .toList();
 
