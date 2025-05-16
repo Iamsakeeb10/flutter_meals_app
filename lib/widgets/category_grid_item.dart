@@ -23,6 +23,8 @@ class CategoryGridItem extends StatelessWidget {
             .where((meal) => meal.categories.contains(category.id))
             .toList();
 
+    print('🟨  Filtered Meals =>>> $filteredMeals');
+
     Navigator.push(
       context,
       MaterialPageRoute(

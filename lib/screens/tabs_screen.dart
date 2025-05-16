@@ -6,13 +6,6 @@ import 'package:find_your_meals/screens/meals_screen.dart';
 import 'package:find_your_meals/widgets/main_drawer.dart';
 import 'package:flutter/material.dart';
 
-const kFilterInitializer = {
-  Filter.glutenFree: false,
-  Filter.lactoseFree: false,
-  Filter.vegan: false,
-  Filter.vegetarian: false,
-};
-
 class TabsScreen extends StatefulWidget {
   const TabsScreen({super.key});
 
@@ -23,7 +16,12 @@ class TabsScreen extends StatefulWidget {
 class _TabsScreenState extends State<TabsScreen> {
   int _selectedPageIndex = 0;
   final List<Meal> _favoriteMeals = [];
-  Map<Filter, bool> _selectedFilters = kFilterInitializer;
+  Map<Filter, bool> _selectedFilters = {
+    Filter.glutenFree: false,
+    Filter.lactoseFree: false,
+    Filter.vegan: false,
+    Filter.vegetarian: false,
+  };
 
   void showSnackbar(String content) {
     ScaffoldMessenger.of(context).clearSnackBars();
@@ -61,12 +59,16 @@ class _TabsScreenState extends State<TabsScreen> {
     if (identifer == 'filters') {
       final result = await Navigator.push<Map<Filter, bool>>(
         context,
-        MaterialPageRoute(builder: (ctx) => FiltersScreen()),
+        MaterialPageRoute(
+          builder: (ctx) => FiltersScreen(selectedFilters: _selectedFilters),
+        ),
       );
 
-      setState(() {
-        _selectedFilters = result ?? kFilterInitializer;
-      });
+      if (result != null) {
+        setState(() {
+          _selectedFilters = result;
+        });
+      }
     }
   }
 
