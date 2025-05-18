@@ -7,14 +7,10 @@ class CategoryGridItem extends StatelessWidget {
   const CategoryGridItem({
     super.key,
     required this.category,
-    required this.onToggleFavorite,
-    required this.favoriteMeals,
     required this.availableMeals,
   });
 
   final Category category;
-  final void Function(Meal meal) onToggleFavorite;
-  final List<Meal> favoriteMeals;
   final List<Meal> availableMeals;
 
   void onPressCategoryHandler(BuildContext context) {
@@ -29,12 +25,7 @@ class CategoryGridItem extends StatelessWidget {
       context,
       MaterialPageRoute(
         builder:
-            (ctx) => MealsScreen(
-              title: category.title,
-              meals: filteredMeals,
-              onToggleFavorite: onToggleFavorite,
-              favoriteMeals: favoriteMeals,
-            ),
+            (ctx) => MealsScreen(title: category.title, meals: filteredMeals),
       ),
     );
   }

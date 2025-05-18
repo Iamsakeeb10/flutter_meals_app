@@ -1,49 +1,40 @@
 import 'package:find_your_meals/models/meal.dart';
+import 'package:find_your_meals/providers/favorites_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class MealsDetailsScreen extends StatefulWidget {
-  const MealsDetailsScreen({
-    super.key,
-    required this.meal,
-    required this.onToggleFavorite,
-    required this.favoriteMeals,
-  });
+class MealsDetailsScreen extends ConsumerWidget {
+  const MealsDetailsScreen({super.key, required this.meal});
 
   final Meal meal;
-  final void Function(Meal meal) onToggleFavorite;
-  final List<Meal> favoriteMeals;
 
   @override
-  State<MealsDetailsScreen> createState() => _MealsDetailsScreenState();
-}
+  Widget build(BuildContext context, WidgetRef ref) {
+    final favoriteMeals = ref.watch(favoriteMealsProvider);
+    final isFavorite = favoriteMeals.contains(meal);
 
-class _MealsDetailsScreenState extends State<MealsDetailsScreen> {
-  late bool isFavorite;
-
-  @override
-  void initState() {
-    super.initState();
-    isFavorite = widget.favoriteMeals.any(
-      (element) => element.id == widget.meal.id,
-    );
-  }
-
-  void _toggleFavorite() {
-    widget.onToggleFavorite(widget.meal);
-    setState(() {
-      isFavorite = !isFavorite;
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.meal.title),
+        title: Text(meal.title),
         actions: [
           IconButton(
-            onPressed: _toggleFavorite,
-            icon: isFavorite ? Icon(Icons.star) : Icon(Icons.star_outline),
+            onPressed: () {
+              final wasAdded = ref
+                  .read(favoriteMealsProvider.notifier)
+                  .toggleMealFavoriteStatus(meal);
+
+              ScaffoldMessenger.of(context).clearSnackBars();
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(
+                    wasAdded
+                        ? 'Meal added to favorites'
+                        : 'Removed from favorites',
+                  ),
+                ),
+              );
+            },
+            icon: Icon(isFavorite ? Icons.star : Icons.star_outline),
           ),
         ],
       ),
@@ -52,7 +43,7 @@ class _MealsDetailsScreenState extends State<MealsDetailsScreen> {
           Column(
             children: [
               Image.network(
-                widget.meal.imageUrl,
+                meal.imageUrl,
                 fit: BoxFit.cover,
                 height: 300,
                 width: double.infinity,
@@ -66,7 +57,7 @@ class _MealsDetailsScreenState extends State<MealsDetailsScreen> {
                 ),
               ),
               SizedBox(height: 14),
-              for (final ingredient in widget.meal.ingredients)
+              for (final ingredient in meal.ingredients)
                 Text(
                   ingredient,
                   style: Theme.of(context).textTheme.bodyMedium!.copyWith(
@@ -82,7 +73,7 @@ class _MealsDetailsScreenState extends State<MealsDetailsScreen> {
                 ),
               ),
               SizedBox(height: 14),
-              for (final step in widget.meal.steps)
+              for (final step in meal.steps)
                 Padding(
                   padding: const EdgeInsets.symmetric(
                     horizontal: 12.0,

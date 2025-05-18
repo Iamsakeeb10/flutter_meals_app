@@ -4,15 +4,8 @@ import 'package:find_your_meals/widgets/category_grid_item.dart';
 import 'package:flutter/material.dart';
 
 class CategoriesScreen extends StatelessWidget {
-  const CategoriesScreen({
-    super.key,
-    required this.onToggleFavorite,
-    required this.favoriteMeals,
-    required this.availableMeals,
-  });
+  const CategoriesScreen({super.key, required this.availableMeals});
 
-  final void Function(Meal meal) onToggleFavorite;
-  final List<Meal> favoriteMeals;
   final List<Meal> availableMeals;
 
   @override
@@ -27,12 +20,7 @@ class CategoriesScreen extends StatelessWidget {
       ),
       children: [
         for (final category in availableCategories)
-          CategoryGridItem(
-            category: category,
-            onToggleFavorite: onToggleFavorite,
-            favoriteMeals: favoriteMeals,
-            availableMeals: availableMeals,
-          ),
+          CategoryGridItem(category: category, availableMeals: availableMeals),
       ],
     );
   }

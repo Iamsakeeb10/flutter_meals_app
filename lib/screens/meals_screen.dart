@@ -4,30 +4,15 @@ import 'package:find_your_meals/widgets/meal_item.dart';
 import 'package:flutter/material.dart';
 
 class MealsScreen extends StatelessWidget {
-  const MealsScreen({
-    super.key,
-    this.title,
-    required this.meals,
-    required this.onToggleFavorite,
-    required this.favoriteMeals,
-  });
+  const MealsScreen({super.key, this.title, required this.meals});
 
   final String? title;
   final List<Meal> meals;
-  final void Function(Meal meal) onToggleFavorite;
-  final List<Meal> favoriteMeals;
 
   void selectMeal(BuildContext context, Meal meal) {
     Navigator.push(
       context,
-      MaterialPageRoute(
-        builder:
-            (ctx) => MealsDetailsScreen(
-              meal: meal,
-              onToggleFavorite: onToggleFavorite,
-              favoriteMeals: favoriteMeals,
-            ),
-      ),
+      MaterialPageRoute(builder: (ctx) => MealsDetailsScreen(meal: meal)),
     );
   }
 
